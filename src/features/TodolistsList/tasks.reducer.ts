@@ -1,5 +1,5 @@
 import { TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType } from "api/todolists-api";
-import { AppThunk } from "app/store";
+import { AppDispatch, AppRootStateType, AppThunk } from "app/store";
 import { handleServerAppError, handleServerNetworkError } from "utils/error-utils";
 import { appActions } from "app/app.reducer";
 import { todolistsActions } from "features/TodolistsList/todolists.reducer";
@@ -63,16 +63,30 @@ export const tasksActions = slice.actions;
 
 // thunks
 
-export const fetchTasks = createAsyncThunk(`${slice.name}/fetchTasks`, async (todolistId: string, thunkAPI) => {
-  const { dispatch } = thunkAPI;
-  dispatch(appActions.setAppStatus({ status: "loading" }));
-  const res = await todolistsAPI.getTasks(todolistId);
-  const tasks = res.data.items;
-  dispatch(appActions.setAppStatus({ status: "succeeded" }));
-  // dispatch(tasksActions.setTasks({ tasks, todolistId }));
-  return { tasks, todolistId };
-});
-
+export const fetchTasks = createAsyncThunk<
+  {
+    tasks: TaskType[];
+    todolistId: string;
+  },
+  string,
+  {
+    state: AppRootStateType,
+    dispatch: AppDispatch,
+    rejectValue: null
+  }>(`${slice.name}/fetchTasks`,
+  async (todolistId: string, thunkAPI) => {
+    const { dispatch, rejectWithValue } = thunkAPI;
+    try {
+      dispatch(appActions.setAppStatus({ status: "loading" }));
+      const res = await todolistsAPI.getTasks(todolistId);
+      const tasks = res.data.items;
+      dispatch(appActions.setAppStatus({ status: "succeeded" }));
+      return { tasks, todolistId };
+    } catch (err: any) {
+      handleServerNetworkError(err, dispatch);
+      return rejectWithValue(null);
+    }
+  });
 
 export const removeTaskTC =
   (taskId: string, todolistId: string): AppThunk =>
@@ -101,6 +115,7 @@ export const addTaskTC =
           handleServerNetworkError(error, dispatch);
         });
     };
+
 export const updateTaskTC =
   (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string): AppThunk =>
     (dispatch, getState) => {
