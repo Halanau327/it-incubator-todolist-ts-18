@@ -1,18 +1,18 @@
 import {
   AddTaskArg,
-  TaskPriorities,
-  TaskStatuses,
   TaskType,
   todolistsAPI, UpdateTaskArgs,
   UpdateTaskModelType
-} from "api/todolists-api";
+} from "features/TodolistsList/todolists-api";
 import { AppThunk } from "app/store";
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils";
+import { handleServerAppError } from "common/utils/handleServerAppError";
 import { appActions } from "app/app.reducer";
 import { todolistsActions } from "features/TodolistsList/todolists.reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "common/actions/common.actions";
-import { createAppAsyncThunk } from "../../utils/createAppAsyncThunk";
+import { createAppAsyncThunk } from "../../common/utils/createAppAsyncThunk";
+import { handleServerNetworkError } from "../../common/utils/handleServerNetworkError";
+import { TaskPriorities, TaskStatuses } from "../../common/enums/enums";
 
 const initialState: TasksStateType = {};
 
@@ -83,6 +83,7 @@ export const fetchTasks = createAppAsyncThunk<
       return rejectWithValue(null);
     }
   });
+
 
 export const addTask = createAppAsyncThunk<{task: TaskType}, AddTaskArg>(`${slice.name}/addTask`, async (arg, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;

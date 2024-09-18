@@ -6,9 +6,9 @@ import {
   TasksStateType,
   updateTask
 } from "features/TodolistsList/tasks.reducer";
-import { TaskPriorities, TaskStatuses, TaskType } from "api/todolists-api";
 import { todolistsActions } from "features/TodolistsList/todolists.reducer";
-import { TestAction } from "../../common/types/types";
+import { TaskPriorities, TaskStatuses } from "../../common/enums/enums";
+import { TestAction } from "../../common/types/responseType";
 
 let startState: TasksStateType = {};
 beforeEach(() => {
