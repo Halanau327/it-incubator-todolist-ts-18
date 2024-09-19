@@ -1,6 +1,6 @@
 import {
   addTask,
-  fetchTasks,
+  fetchTasks, removeTask,
   tasksActions,
   tasksReducer,
   TasksStateType,
@@ -8,7 +8,7 @@ import {
 } from "features/TodolistsList/tasks.reducer";
 import { todolistsActions } from "features/TodolistsList/todolists.reducer";
 import { TaskPriorities, TaskStatuses } from "../../common/enums/enums";
-import { TestAction } from "../../common/types/responseType";
+import { TestAction } from "common/types/types";
 
 let startState: TasksStateType = {};
 beforeEach(() => {
@@ -93,7 +93,13 @@ beforeEach(() => {
 });
 
 test("correct task should be deleted from correct array", () => {
-  const action = tasksActions.removeTask({ taskId: "2", todolistId: "todolistId2" });
+  const action: TestAction<typeof removeTask.fulfilled> = {
+    type: removeTask.fulfilled.type,
+    payload: {
+      todolistId: "todolistId2",
+      taskId: "2",
+    }
+  };
 
   const endState = tasksReducer(startState, action);
 

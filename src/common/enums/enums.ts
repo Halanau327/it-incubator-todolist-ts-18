@@ -11,7 +11,7 @@ export enum TaskPriorities {
   Urgently = 3,
   Later = 4,
 }
-export const enum ResultCode  {
+export enum ResultCode  {
   Success = 0,
   Error,
   Captcha = 10

@@ -8,7 +8,7 @@ import {
   removeTodolistTC,
   todolistsActions,
 } from "features/TodolistsList/todolists.reducer";
-import { addTask, removeTaskTC, updateTask } from "features/TodolistsList/tasks.reducer";
+import { addTask, removeTask, updateTask } from "features/TodolistsList/tasks.reducer";
 import { Grid, Paper } from "@mui/material";
 import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
 import { Todolist } from "./Todolist/Todolist";
@@ -17,7 +17,7 @@ import { useAppDispatch } from "hooks/useAppDispatch";
 import { selectIsLoggedIn } from "features/auth/model/auth.selectors";
 import { selectTasks } from "features/TodolistsList/tasks.selectors";
 import { selectTodolists } from "features/TodolistsList/todolists.selectors";
-import { TaskStatuses } from "../../common/enums/enums";
+import { TaskStatuses } from "common/enums";
 
 type PropsType = {
   demo?: boolean;
@@ -38,9 +38,8 @@ export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
     dispatch(thunk);
   }, []);
 
-  const removeTask = useCallback(function (id: string, todolistId: string) {
-    const thunk = removeTaskTC(id, todolistId);
-    dispatch(thunk);
+  const removeTaskCallback = useCallback(function (taskId: string, todolistId: string) {
+    dispatch(removeTask({todolistId, taskId}))
   }, []);
 
   const addTaskCallback = useCallback(function (title: string, todolistId: string) {
@@ -96,7 +95,7 @@ export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
                 <Todolist
                   todolist={tl}
                   tasks={allTodolistTasks}
-                  removeTask={removeTask}
+                  removeTask={removeTaskCallback}
                   changeFilter={changeFilter}
                   addTask={addTaskCallback}
                   changeTaskStatus={changeStatus}

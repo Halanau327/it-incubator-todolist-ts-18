@@ -1,10 +1,7 @@
-import axios from "axios";
 import { UpdateDomainTaskModelType } from "./tasks.reducer";
-import { TaskPriorities, TaskStatuses } from "../../common/enums/enums";
-import { instance } from "../../common/instance/instance";
-import { BaseResponce } from "../../common/types/responseType";
-
-
+import { TaskPriorities, TaskStatuses } from "common/enums";
+import { instance } from "common/instance/instance";
+import { BaseResponce } from "common/types";
 
 // api
 export const todolistsAPI = {
@@ -45,12 +42,15 @@ export type UpdateTaskArgs = {
   todolistId: string
 }
 
-
 export type AddTaskArg = {
   todolistId: string
   title: string
 }
 
+export type RemoveTaskArg = {
+  taskId: string,
+  todolistId: string
+}
 
 // types
 export type TodolistType = {
