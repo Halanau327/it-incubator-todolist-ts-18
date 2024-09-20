@@ -52,6 +52,10 @@ export type RemoveTaskArg = {
   todolistId: string
 }
 
+export type RemoveTodolistArg = {
+  todolistId: string
+}
+
 // types
 export type TodolistType = {
   id: string;

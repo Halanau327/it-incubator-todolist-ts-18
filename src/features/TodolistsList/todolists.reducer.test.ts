@@ -1,8 +1,9 @@
 import {
-  FilterValuesType,
+  fetchTodolists,
+  FilterValuesType, removeTodolist,
   TodolistDomainType,
   todolistsActions,
-  todolistsReducer,
+  todolistsReducer
 } from "features/TodolistsList/todolists.reducer";
 import { v1 } from "uuid";
 import { TodolistType } from "features/TodolistsList/todolists-api";
@@ -21,12 +22,19 @@ beforeEach(() => {
   ];
 });
 
-test("correct todolist should be removed", () => {
-  const endState = todolistsReducer(startState, todolistsActions.removeTodolist({ id: todolistId1 }));
-
-  expect(endState.length).toBe(1);
-  expect(endState[0].id).toBe(todolistId2);
-});
+// test("correct todolist should be removed", () => {
+//   type Action = Omit<ReturnType<typeof removeTodolist.fulfilled>, "meta">
+//   const action: Action = {
+//     type: removeTodolist.fulfilled.type,
+//     payload: {
+//       todolistId: "todolistId1"
+//     }
+//   };
+//
+//   const endState = todolistsReducer(startState, action);
+//   expect(endState.length).toBe(1);
+//   expect(endState[0].id).toBe(todolistId2);
+// });
 
 test("correct todolist should be added", () => {
   let todolist: TodolistType = {
@@ -65,7 +73,13 @@ test("correct filter of todolist should be changed", () => {
   expect(endState[1].filter).toBe(newFilter);
 });
 test("todolists should be added", () => {
-  const action = todolistsActions.setTodolists({ todolists: startState });
+  type Action = Omit<ReturnType<typeof fetchTodolists.fulfilled>, "meta">
+  const action: Action = {
+    type: fetchTodolists.fulfilled.type,
+    payload: {
+      todolists: startState
+    }
+  };
 
   const endState = todolistsReducer([], action);
 

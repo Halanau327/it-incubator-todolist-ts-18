@@ -5,7 +5,11 @@ import {
   UpdateTaskModelType
 } from "features/TodolistsList/todolists-api";
 import { appActions } from "app/app.reducer";
-import { todolistsActions } from "features/TodolistsList/todolists.reducer";
+import {
+  fetchTodolists,
+  removeTodolist,
+  todolistsActions,
+} from "features/TodolistsList/todolists.reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "common/actions/common.actions";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
@@ -41,17 +45,17 @@ const slice = createSlice({
       .addCase(todolistsActions.addTodolist, (state, action) => {
         state[action.payload.todolist.id] = [];
       })
-      .addCase(todolistsActions.removeTodolist, (state, action) => {
-        delete state[action.payload.id];
+      .addCase(removeTodolist.fulfilled, (state, action) => {
+        delete state[action.payload.todolistId];
       })
-      .addCase(todolistsActions.setTodolists, (state, action) => {
+      .addCase(fetchTodolists.fulfilled, (state, action) => {
         action.payload.todolists.forEach((tl) => {
           state[tl.id] = [];
         });
       })
       .addCase(clearTasksAndTodolists, () => {
         return {};
-      });
+      })
   }
 });
 
