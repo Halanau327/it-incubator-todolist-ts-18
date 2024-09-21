@@ -6,9 +6,9 @@ import {
 } from "features/TodolistsList/todolists-api";
 import { appActions } from "app/app.reducer";
 import {
-  fetchTodolists,
+  addTodolist,
   removeTodolist,
-  todolistsActions,
+  todolistsThunks
 } from "features/TodolistsList/todolists.reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "common/actions/common.actions";
@@ -42,19 +42,19 @@ const slice = createSlice({
           tasks[index] = { ...tasks[index], ...action.payload.model };
         };
       })
-      .addCase(todolistsActions.addTodolist, (state, action) => {
+      .addCase(addTodolist.fulfilled, (state, action) => {
         state[action.payload.todolist.id] = [];
       })
       .addCase(removeTodolist.fulfilled, (state, action) => {
         delete state[action.payload.todolistId];
       })
-      .addCase(fetchTodolists.fulfilled, (state, action) => {
-        action.payload.todolists.forEach((tl) => {
-          state[tl.id] = [];
-        });
-      })
       .addCase(clearTasksAndTodolists, () => {
         return {};
+      })
+      .addCase(todolistsThunks.fetchTodolists.fulfilled, (state, action) => {
+        action.payload.todolists.forEach((tl) => {
+          state[tl.id] = []
+        })
       })
   }
 });

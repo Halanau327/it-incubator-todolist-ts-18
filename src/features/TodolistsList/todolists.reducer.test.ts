@@ -1,4 +1,5 @@
 import {
+  addTodolist, changeTodolistTitle,
   fetchTodolists,
   FilterValuesType, removeTodolist,
   TodolistDomainType,
@@ -22,39 +23,51 @@ beforeEach(() => {
   ];
 });
 
-// test("correct todolist should be removed", () => {
-//   type Action = Omit<ReturnType<typeof removeTodolist.fulfilled>, "meta">
-//   const action: Action = {
-//     type: removeTodolist.fulfilled.type,
-//     payload: {
-//       todolistId: "todolistId1"
-//     }
-//   };
-//
-//   const endState = todolistsReducer(startState, action);
-//   expect(endState.length).toBe(1);
-//   expect(endState[0].id).toBe(todolistId2);
-// });
-
-test("correct todolist should be added", () => {
-  let todolist: TodolistType = {
-    title: "New Todolist",
-    id: "any id",
-    addedDate: "",
-    order: 0,
+test("correct todolist should be removed", () => {
+  type Action = Omit<ReturnType<typeof removeTodolist.fulfilled>, "meta">
+  const action: Action = {
+    type: removeTodolist.fulfilled.type,
+    payload: {
+      todolistId: todolistId1
+    }
   };
 
-  const endState = todolistsReducer(startState, todolistsActions.addTodolist({ todolist }));
+  const endState = todolistsReducer(startState, action);
+  expect(endState.length).toBe(1);
+  expect(endState[0].id).toBe(todolistId2);
+});
+
+test("correct todolist should be added", () => {
+  type Action = Omit<ReturnType<typeof addTodolist.fulfilled>, "meta">
+  const action: Action = {
+    type: addTodolist.fulfilled.type,
+    payload: {
+      todolist: {
+        title: "New Todolist",
+        id: "any id",
+        addedDate: "",
+        order: 0,
+      }
+    }
+  }
+
+  const endState = todolistsReducer(startState, action);
 
   expect(endState.length).toBe(3);
-  expect(endState[0].title).toBe(todolist.title);
+  expect(endState[0].title).toBe(action.payload.todolist.title);
   expect(endState[0].filter).toBe("all");
 });
 
 test("correct todolist should change its name", () => {
   let newTodolistTitle = "New Todolist";
-
-  const action = todolistsActions.changeTodolistTitle({ id: todolistId2, title: newTodolistTitle });
+  type Action = Omit<ReturnType<typeof changeTodolistTitle.fulfilled>, "meta">
+  const action: Action = {
+    type: changeTodolistTitle.fulfilled.type,
+    payload: {
+      todolistId: todolistId2,
+      title: newTodolistTitle
+    }
+  };
 
   const endState = todolistsReducer(startState, action);
 
